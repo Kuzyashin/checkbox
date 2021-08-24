@@ -1,0 +1,145 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Service for calculation distance between 2 GEO points",
+        "title": "Swagger Example API",
+        "contact": {
+            "name": "Alexey Kuzyashin",
+            "email": "terr.kuzyashin@gmail.com"
+        },
+        "version": "1.0"
+    },
+    "paths": {
+        "/route": {
+            "post": {
+                "description": "create calculation request.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "routes"
+                ],
+                "summary": "Create request for calculation.",
+                "operationId": "create-request",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.RouteCreatedJson"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.ErrorJson"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.ErrorJson"
+                        }
+                    }
+                }
+            }
+        },
+        "/route/{request_id}": {
+            "get": {
+                "description": "get the result of calculation.",
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "routes"
+                ],
+                "summary": "Returns result of calculation.",
+                "operationId": "get-result-by-id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Request ID",
+                        "name": "request_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Route"
+                        }
+                    },
+                    "400": {
+                        "description": "Error"
+                    },
+                    "404": {
+                        "description": "Route not found"
+                    },
+                    "425": {
+                        "description": "Route calculation not completed yet. Try later"
+                    },
+                    "500": {
+                        "description": "Fatal error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "handlers.ErrorJson": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                },
+                "msg": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.RouteCreatedJson": {
+            "type": "object",
+            "properties": {
+                "route_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.Route": {
+            "type": "object",
+            "required": [
+                "from_lat",
+                "from_lng",
+                "to_lat",
+                "to_lng"
+            ],
+            "properties": {
+                "from_lat": {
+                    "type": "number"
+                },
+                "from_lng": {
+                    "type": "number"
+                },
+                "length_in_meters": {
+                    "type": "integer"
+                },
+                "to_lat": {
+                    "type": "number"
+                },
+                "to_lng": {
+                    "type": "number"
+                },
+                "travel_time_in_seconds": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}

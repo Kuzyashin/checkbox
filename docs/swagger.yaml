@@ -1,0 +1,96 @@
+definitions:
+  handlers.ErrorJson:
+    properties:
+      error:
+        type: string
+      msg:
+        type: string
+    type: object
+  handlers.RouteCreatedJson:
+    properties:
+      route_id:
+        type: integer
+    type: object
+  models.Route:
+    properties:
+      from_lat:
+        type: number
+      from_lng:
+        type: number
+      length_in_meters:
+        type: integer
+      to_lat:
+        type: number
+      to_lng:
+        type: number
+      travel_time_in_seconds:
+        type: integer
+    required:
+    - from_lat
+    - from_lng
+    - to_lat
+    - to_lng
+    type: object
+info:
+  contact:
+    email: terr.kuzyashin@gmail.com
+    name: Alexey Kuzyashin
+  description: Service for calculation distance between 2 GEO points
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /route:
+    post:
+      consumes:
+      - application/json
+      description: create calculation request.
+      operationId: create-request
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.RouteCreatedJson'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorJson'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorJson'
+      summary: Create request for calculation.
+      tags:
+      - routes
+  /route/{request_id}:
+    get:
+      consumes:
+      - '*/*'
+      description: get the result of calculation.
+      operationId: get-result-by-id
+      parameters:
+      - description: Request ID
+        in: path
+        name: request_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Route'
+        "400":
+          description: Error
+        "404":
+          description: Route not found
+        "425":
+          description: Route calculation not completed yet. Try later
+        "500":
+          description: Fatal error
+      summary: Returns result of calculation.
+      tags:
+      - routes
+swagger: "2.0"
