@@ -1,4 +1,4 @@
-package routes
+package services
 
 import (
 	"github.com/AKuzyashin/checkbox/internal/models"
@@ -7,10 +7,10 @@ import (
 )
 
 type routes struct {
-	db repository.DatabaseRepo
+	db repository.RoutesDBRepo
 }
 
-func NewRoutes(db repository.DatabaseRepo) *routes {
+func NewRoutes(db repository.RoutesDBRepo) *routes {
 	return &routes{db: db}
 }
 

@@ -7,8 +7,8 @@ import (
 	"github.com/AKuzyashin/checkbox/internal/handlers"
 	"github.com/AKuzyashin/checkbox/internal/logging"
 	"github.com/AKuzyashin/checkbox/internal/models"
+	"github.com/AKuzyashin/checkbox/internal/repository"
 	"github.com/AKuzyashin/checkbox/internal/services"
-	"github.com/AKuzyashin/checkbox/internal/storage"
 	"github.com/AKuzyashin/checkbox/internal/worker"
 	"os"
 	"os/signal"
@@ -16,22 +16,20 @@ import (
 	"syscall"
 )
 
-
 // @title Swagger Example API
 // @version 1.0
 // @description Service for calculation distance between 2 GEO points
 
 // @contact.name Alexey Kuzyashin
 // @contact.email terr.kuzyashin@gmail.com
-func main()  {
+func main() {
 	logger := logging.NewLogger()
 	cfg, err := config.GetConfig()
 	if err != nil {
 		logger.Fatal().Err(err).Send()
 	}
 	wg := sync.WaitGroup{}
-	db, err := storage.NewPostgres(cfg)
-
+	db, err := repository.NewPostgres(cfg)
 	if err != nil {
 		logger.Fatal().Err(err).Send()
 	}
