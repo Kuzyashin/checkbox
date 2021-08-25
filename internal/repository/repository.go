@@ -17,3 +17,10 @@ type HandlersRepo interface {
 	GetResult(c *gin.Context)
 	Register(app *gin.Engine)
 }
+
+type RoutesRepo interface {
+	CreateRequest(request *models.Route) error
+	SaveResult(result *models.Route) error
+	GetResult(requestID uint64) (*models.Route, error)
+	GetUnprocessed() []*models.Route
+}

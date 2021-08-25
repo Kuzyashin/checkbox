@@ -23,16 +23,16 @@ func (p *postgresDb) SaveResult(r *models.Route) error {
 	err := p.db.Model(r).Where("id", r.ID).
 		Updates(
 			map[string]interface{}{
-				"length_in_meters": r.LengthInMeters,
+				"length_in_meters":       r.LengthInMeters,
 				"travel_time_in_seconds": r.TravelTimeInSeconds,
-				"processed_at": r.ProcessedAt},
-			).Error
+				"processed_at":           r.ProcessedAt},
+		).Error
 	return err
 }
 
 func (p *postgresDb) GetResult(requestID uint64) (*models.Route, error) {
 	var result models.Route
-	err := p.db.Model(&result).First(&result, requestID).Error
+	err := p.db.Model(&result).Find(&result, requestID).Error
 	return &result, err
 }
 

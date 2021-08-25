@@ -42,7 +42,7 @@ func (h *Handlers) CreateRequest(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, ErrorJson{Error: err.Error()})
 		return
 	}
-	err := h.services.Database.CreateRequest(&requestIn)
+	err := h.services.Routes.CreateRequest(&requestIn)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, ErrorJson{Error: "Fatal error"})
 	}
@@ -70,14 +70,16 @@ func (h *Handlers) GetResult(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, ErrorJson{Error: "can not parse request_id"})
 		return
 	}
-	result, err := h.services.Database.GetResult(uri.RequestID)
-	if !result.IsValid() {
+	result, err := h.services.Routes.GetResult(uri.RequestID)
+	switch {
+	case !result.IsValid():
 		c.JSON(http.StatusNotFound, nil)
-	} else if !result.HasResult() {
+	case !result.HasResult():
 		c.JSON(http.StatusTooEarly, nil)
-	} else if err != nil {
+	case err != nil:
 		c.JSON(http.StatusInternalServerError, ErrorJson{Error: "Fatal error"})
-	} else {
+	default:
 		c.JSON(http.StatusOK, result)
 	}
+
 }

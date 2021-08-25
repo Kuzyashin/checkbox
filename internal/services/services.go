@@ -3,6 +3,7 @@ package services
 import (
 	"github.com/AKuzyashin/checkbox/internal/config"
 	"github.com/AKuzyashin/checkbox/internal/repository"
+	"github.com/AKuzyashin/checkbox/internal/routes"
 	"github.com/AKuzyashin/checkbox/pkg/tomtom"
 	"github.com/rs/zerolog"
 )
@@ -10,10 +11,11 @@ import (
 type Services struct {
 	logger zerolog.Logger
 	TomTom tomtom.Client
-	Database repository.DatabaseRepo
+	Routes repository.RoutesRepo
 }
 
 func NewServices(cfg *config.AppConfig, db repository.DatabaseRepo) *Services {
 	tomTom := tomtom.NewClient(cfg.TomTom.ApiKey)
-	return &Services{TomTom: tomTom, Database: db}
+	rs := routes.NewRoutes(db)
+	return &Services{TomTom: tomTom, Routes: rs}
 }

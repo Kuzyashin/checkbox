@@ -25,7 +25,7 @@ func NewWorker(ctx context.Context, wg *sync.WaitGroup, services *srv.Services, 
 	return &Worker{ctx: ctx, wg: wg, services: services, msgChan: msgChan, logger: logger}
 }
 
-func (w *Worker) Start()  {
+func (w *Worker) Start() {
 	go w.run()
 	w.searchOld()
 }
@@ -58,7 +58,7 @@ func (w *Worker) run() {
 			if err != nil {
 				w.logger.Error().Err(err).Send()
 			}
-			err = w.services.Database.SaveResult(&models.Route{
+			err = w.services.Routes.SaveResult(&models.Route{
 				ID:                  msg.RequestID,
 				ProcessedAt:         sql.NullTime{Time: time.Now(), Valid: true},
 				LengthInMeters:      result.Routes[0].Summary.LengthInMeters,
@@ -72,7 +72,7 @@ func (w *Worker) run() {
 }
 
 func (w *Worker) searchOld() {
-	unprocessedRoutes := w.services.Database.GetUnprocessed()
+	unprocessedRoutes := w.services.Routes.GetUnprocessed()
 	for _, route := range unprocessedRoutes {
 		w.msgChan <- route.ToWorkerMsg()
 	}
